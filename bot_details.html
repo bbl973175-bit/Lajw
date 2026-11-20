@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NEXORA | تفاصيل البوت</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { background:#0b1020; color:white; font-family:Arial,sans-serif; margin:0; }
+        .page { max-width:800px; margin:40px auto; padding:20px; }
+        .panel { background:#151d32; border:1px solid #28334e; padding:25px; border-radius:18px; }
+        .back,.action { display:inline-block; background:#635bff; color:white; text-decoration:none; border:0; padding:12px 18px; border-radius:10px; cursor:pointer; }
+        .muted { color:#aab5ca; }
+        li { margin:12px 0; }
+    </style>
+</head>
+<body>
+<div class="page">
+    <a class="back" href="{{ url_for('bot_library') }}">رجوع للمكتبة</a>
+
+    <div class="panel" style="margin-top:20px">
+        <div style="font-size:55px">{{ bot.get('icon', '🤖') }}</div>
+        <h1>{{ bot.get('name', 'Bot') }}</h1>
+        <p class="muted">{{ bot.get('type', 'بوت ديسكورد') }}</p>
+
+        <h3>وصف البوت</h3>
+        <p>{{ bot.get('description', 'لا يوجد وصف لهذا البوت حالياً.') }}</p>
+
+        <h3>المميزات</h3>
+        <ul>
+            {% for feature in bot.get('features', []) %}
+                <li>{{ feature }}</li>
+            {% else %}
+                <li class="muted">لم تتم إضافة مميزات بعد.</li>
+            {% endfor %}
+        </ul>
+
+        <p>
+            الحالة:
+            {% if bot.running %}
+                <span style="color:#4ade80">يعمل</span>
+            {% else %}
+                <span style="color:#f87171">متوقف</span>
+            {% endif %}
+        </p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error | Bot Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <main class="login-page">
+        <div class="login-card">
+            <div class="logo">!</div>
+            <span class="eyebrow">ACCESS ERROR</span>
+            <h1>غير مسموح</h1>
+            <p>{{ message }}</p>
+            <a href="{{ url_for('index') }}" class="btn btn-primary full-width">
+                العودة للرئيسية / Home
+            </a>
+        </div>
+    </main>
+</body>
+</html>

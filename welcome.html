@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #090d18;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .card {
+            width: 90%;
+            max-width: 420px;
+            padding: 35px 25px;
+            text-align: center;
+            background: #151c2e;
+            border: 1px solid #293653;
+            border-radius: 20px;
+        }
+        h1 { color: #8b9cff; font-size: 34px; }
+        p { color: #b7c0d5; line-height: 1.8; }
+        a {
+            display: block;
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #5865F2;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover { background: #4752c4; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>NEXORA</h1>
+        <p>منصة إدارة بوتات Discord الخاصة بك</p>
+        <p>سجّل دخولك باستخدام حساب Discord للمتابعة.</p>
+        <a href="{{ url_for('discord_login') }}">
+            تسجيل الدخول عبر Discord
+        </a>
+    </div>
+</body>
+</html>

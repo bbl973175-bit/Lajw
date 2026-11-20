@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1020">
+    <title>NEXORA | Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="NEXORA">
+            <h2>NEXORA</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('dashboard') }}" class="active">
+                <span>🏠</span> الرئيسية
+            </a>
+<a href="{{ url_for('bot_library') }}">📚 مكتبة البوتات</a>
+            {% if user.is_owner %}
+            <a href="#bots">
+                <span>🤖</span> إدارة البوتات
+            </a>
+            {% endif %}
+
+            <a href="#account">
+                <span>👤</span> حسابي
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button type="button" id="themeToggle">
+                <span>🌙</span> تغيير المظهر
+            </button>
+
+            <a href="{{ url_for('logout') }}" class="logout-link">
+                <span>🚪</span> تسجيل الخروج
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="dashboard-header">
+            <div class="header-title">
+                <span class="header-label">NEXORA CONTROL CENTER</span>
+                <h1>لوحة التحكم</h1>
+                <p>مرحباً بك في منصة NEXORA</p>
+            </div>
+
+            <div class="user-profile">
+                {% if user.avatar and user.discord_id %}
+                <img src="https://cdn.discordapp.com/avatars/{{ user.discord_id }}/{{ user.avatar }}.png"
+                     alt="Avatar">
+                {% else %}
+                <div class="default-avatar">👤</div>
+                {% endif %}
+
+                <div class="profile-details">
+                    <strong>{{ user.username }}</strong>
+                    <small>
+                        {% if user.is_owner %}مالك المنصة{% else %}مستخدم{% endif %}
+                    </small>
+                </div>
+            </div>
+        </header>
+
+        <section class="welcome-banner"
+            style="background-image: linear-gradient(90deg, rgba(5,12,28,.95), rgba(5,12,28,.45)), url('{{ url_for('static', filename='images/banner.jpg') }}');">
+            <div>
+                <span>NEXORA PLATFORM</span>
+                <h2>تحكم في عالم بوتاتك</h2>
+                <p>كل أدواتك وخدماتك في مكان واحد.</p>
+            </div>
+        </section>
+
+        <section id="account" class="dashboard-section">
+            <div class="section-heading">
+                <h2>معلومات الحساب</h2>
+                <span class="status-badge">نشط</span>
+            </div>
+
+            <div class="account-card">
+                <div class="account-info">
+                    <span>اسم المستخدم</span>
+                    <strong>{{ user.username }}</strong>
+                </div>
+
+                <div class="account-info">
+                    <span>نوع الحساب</span>
+                    <strong>
+                        {% if user.is_owner %}مالك المنصة{% else %}مستخدم عادي{% endif %}
+                    </strong>
+                </div>
+
+                <div class="account-info">
+                    <span>حساب Discord</span>
+                    <strong>
+                        {% if user.discord_id %}{{ user.username }}{% else %}غير مربوط{% endif %}
+                    </strong>
+                </div>
+
+                {% if not user.discord_id %}
+                <a href="{{ url_for('discord_link') }}" class="connect-discord">
+                    🎮 ربط حساب Discord
+                </a>
+                {% else %}
+                <div class="discord-connected">
+                    <span>●</span> حساب Discord مربوط
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        {% if user.is_owner %}
+        <section id="bots" class="dashboard-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>إدارة البوتات</h2>
+                    <p>تحكم في تشغيل وإيقاف بوتات المنصة.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span>🤖</span>
+                    <p>إجمالي البوتات</p>
+                    <h3>{{ bots|length }}</h3>
+                </div>
+
+                <div class="stat-card">
+                    <span>🟢</span>
+                    <p>البوتات العاملة</p>
+                    <h3>{{ bots|selectattr('running')|list|length }}</h3>
+                </div>
+
+                <div class="stat-card">
+                    <span>🔴</span>
+                    <p>البوتات المتوقفة</p>
+                    <h3>{{ bots|rejectattr('running')|list|length }}</h3>
+                </div>
+            </div>
+
+            <div class="bots-grid">
+                {% for bot in bots %}
+                <article class="bot-card">
+
+                    <div class="bot-card-header">
+                        <div class="bot-icon">{{ bot.icon }}</div>
+
+                        {% if bot.running %}
+                        <span class="bot-status running">● يعمل</span>
+                        {% else %}
+                        <span class="bot-status stopped">● متوقف</span>
+                        {% endif %}
+                    </div>
+
+                    <h3>{{ bot.name }}</h3>
+                    <p>{{ bot.type }}</p>
+
+                    <button
+                        class="bot-toggle {% if bot.running %}stop-button{% else %}start-button{% endif %}"
+                        type="button"
+                        data-key="{{ bot.key }}"
+                        data-running="{{ 'true' if bot.running else 'false' }}">
+
+                        {% if bot.running %}إيقاف البوت{% else %}تشغيل البوت{% endif %}
+                    </button>
+                </article>
+
+                {% else %}
+                <div class="empty-state">
+                    <span>🤖</span>
+                    <h3>لا توجد بوتات</h3>
+                    <p>أضف بوتاتك إلى ملف bots.json لعرضها هنا.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        {% else %}
+        <section class="user-welcome-card">
+            <div class="user-welcome-icon">✨</div>
+            <h2>أهلاً بك في NEXORA</h2>
+            <p>تم إنشاء حسابك بنجاح. يمكنك إدارة معلومات حسابك.</p>
+            <p>خدمات إدارة البوتات متاحة لحساب مالك المنصة فقط.</p>
+        </section>
+        {% endif %}
+
+        <footer class="dashboard-footer">
+            NEXORA © 2026 · ALL RIGHTS RESERVED
+        </footer>
+
+    </main>
+</div>
+
+<script>
+    // المظهر
+    const themeToggle = document.getElementById("themeToggle");
+    const savedTheme = localStorage.getItem("nexora-theme") || "dark";
+
+    document.documentElement.setAttribute("data-theme", savedTheme);
+
+    themeToggle.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "light" ? "dark" : "light";
+
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("nexora-theme", next);
+    });
+
+    // تشغيل وإيقاف البوتات
+    const csrfToken = {{ csrf_token()|tojson }};
+
+    document.querySelectorAll(".bot-toggle").forEach(button => {
+        button.addEventListener("click", async () => {
+            const key = button.dataset.key;
+            const wasRunning = button.dataset.running === "true";
+
+            button.disabled = true;
+            button.textContent = "جاري التنفيذ...";
+
+            try {
+                const response = await fetch(
+                    `/bots/${encodeURIComponent(key)}/toggle`,
+                    {
+                        method: "POST",
+                        headers: { "X-CSRF-Token": csrfToken }
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok || !result.ok) {
+                    throw new Error("تعذر تنفيذ العملية");
+                }
+
+                location.reload();
+
+            } catch (error) {
+                alert("حدث خطأ أثناء التحكم بالبوت.");
+                button.disabled = false;
+                button.textContent = wasRunning ? "إيقاف البوت" : "تشغيل البوت";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+[
+    {
+        "key": "ticket-bot",
+        "name": "Ticket Bot",
+        "type": "بوت تذاكر",
+        "icon": "🎫",
+        "script": "ticket_bot.py",
+        "description": "بوت لإدارة تذاكر الدعم الفني داخل سيرفر Discord.",
+        "features": [
+            "إنشاء التذاكر",
+            "إغلاق التذاكر",
+            "تنظيم طلبات الدعم"
+        ],
+        "env": {}
+    },
+    {
+        "key": "server-bot",
+        "name": "Server Creator Bot",
+        "type": "بوت إنشاء سيرفرات",
+        "icon": "🛠️",
+        "script": "server_bot.py",
+        "description": "بوت يساعد في إعداد وتنظيم السيرفرات.",
+        "features": [
+            "إعداد قنوات السيرفر",
+            "تنظيم الرتب",
+            "إنشاء أقسام السيرفر"
+        ],
+        "env": {}
+    },
+    {
+        "key": "bot-7db421557557",
+        "name": "بوت التكت",
+        "type": "بوت تذاكر",
+        "icon": "🤖",
+        "script": "بوت التكت.py",
+        "description": "بوت تذاكر",
+        "features": [
+            "تست"
+        ],
+        "env": {}
+    }
+]

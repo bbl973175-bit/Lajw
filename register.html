@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NEXORA | إنشاء حساب</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+<main class="auth-page">
+    <section class="auth-card">
+        <img class="auth-logo"
+             src="{{ url_for('static', filename='images/logo.jpg') }}"
+             alt="NEXORA">
+
+        <span class="auth-eyebrow">JOIN NEXORA</span>
+        <h1>إنشاء حساب جديد</h1>
+        <p class="auth-description">
+            أنشئ حسابك وابدأ باستخدام المنصة.
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="auth-alert">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" class="auth-form">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+
+            <label>البريد الإلكتروني</label>
+            <input type="email" name="email"
+                   placeholder="example@email.com"
+                   required autocomplete="email">
+
+            <label>كلمة المرور</label>
+            <input type="password" name="password"
+                   placeholder="8 أحرف على الأقل"
+                   required minlength="8"
+                   autocomplete="new-password">
+
+            <label>تأكيد كلمة المرور</label>
+            <input type="password" name="confirm_password"
+                   placeholder="أعد كتابة كلمة المرور"
+                   required minlength="8"
+                   autocomplete="new-password">
+
+            <button class="auth-button primary" type="submit">
+                إنشاء الحساب
+            </button>
+        </form>
+
+        <p class="auth-bottom">
+            لديك حساب بالفعل؟
+            <a href="{{ url_for('email_login') }}">تسجيل الدخول</a>
+        </p>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NEXORA | مكتبة البوتات</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        body {
+            background:#0b1020;
+            color:#fff;
+            font-family:Arial,sans-serif;
+            margin:0;
+        }
+
+        .page {
+            max-width:1100px;
+            margin:auto;
+            padding:25px 16px;
+        }
+
+        .top {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .back,.details,.submit {
+            background:#635bff;
+            color:white;
+            padding:11px 16px;
+            border-radius:10px;
+            text-decoration:none;
+            display:inline-block;
+            border:0;
+            cursor:pointer;
+        }
+
+        .grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:16px;
+            margin-top:25px;
+        }
+
+        .bot,.add-panel {
+            background:#151d32;
+            border:1px solid #28334e;
+            padding:20px;
+            border-radius:16px;
+        }
+
+        .bot-icon { font-size:35px; }
+        .muted { color:#aab5ca; }
+        .status { font-size:13px; margin:12px 0; }
+
+        .add-panel {
+            margin-top:30px;
+        }
+
+        .add-panel h2 {
+            margin-top:0;
+        }
+
+        .field {
+            margin:15px 0;
+        }
+
+        .field label {
+            display:block;
+            margin-bottom:8px;
+        }
+
+        .field input,.field textarea {
+            width:100%;
+            box-sizing:border-box;
+            padding:13px;
+            border-radius:9px;
+            border:1px solid #35415e;
+            background:#0b1020;
+            color:white;
+            font-size:15px;
+        }
+
+        .field textarea {
+            min-height:90px;
+            resize:vertical;
+        }
+
+        .notice {
+            background:#202b46;
+            border:1px solid #35415e;
+            padding:12px;
+            border-radius:10px;
+            margin:15px 0;
+            color:#cbd5e1;
+        }
+
+        .message {
+            background:#173c31;
+            padding:12px;
+            border-radius:10px;
+            margin:15px 0;
+        }
+
+        @media(max-width:500px) {
+            .page { padding:18px 12px; }
+            .add-panel,.bot { padding:16px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="page">
+
+    <div class="top">
+        <div>
+            <h1>NEXORA</h1>
+            <p class="muted">مكتبة البوتات</p>
+        </div>
+
+        <a class="back" href="{{ url_for('dashboard') }}">
+            العودة للوحة التحكم
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    {% if user.is_owner %}
+    <section class="add-panel">
+        <h2>➕ إضافة بوت جديد</h2>
+        <p class="muted">أدخل معلومات البوت لإضافته إلى المكتبة.</p>
+
+        <div class="notice">
+            يجب أن يكون ملف Python موجوداً مسبقاً داخل مجلد bots.
+        </div>
+
+        <form method="POST" action="{{ url_for('add_bot') }}">
+
+            <input type="hidden"
+                   name="_csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <div class="field">
+                <label>اسم البوت</label>
+                <input name="name"
+                       placeholder="مثال: Moderation Bot"
+                       maxlength="60"
+                       required>
+            </div>
+
+            <div class="field">
+                <label>نوع البوت</label>
+                <input name="type"
+                       placeholder="مثال: بوت إدارة"
+                       maxlength="60"
+                       required>
+            </div>
+
+            <div class="field">
+                <label>أيقونة البوت</label>
+                <input name="icon"
+                       placeholder="🤖"
+                       maxlength="20"
+                       value="🤖">
+            </div>
+
+            <div class="field">
+                <label>وصف البوت</label>
+                <textarea name="description"
+                          placeholder="اكتب وصف البوت هنا..."
+                          maxlength="500"></textarea>
+            </div>
+
+            <div class="field">
+                <label>اسم ملف Python</label>
+                <input name="script"
+                       placeholder="example_bot.py"
+                       required>
+            </div>
+
+            <div class="field">
+                <label>مميزات البوت</label>
+                <textarea name="features"
+                          placeholder="ميزة أولى&#10;ميزة ثانية&#10;ميزة ثالثة"></textarea>
+                <small class="muted">اكتب كل ميزة في سطر منفصل.</small>
+            </div>
+
+            <button class="submit" type="submit">
+                إضافة البوت إلى المكتبة
+            </button>
+        </form>
+    </section>
+    {% endif %}
+
+    <h2 style="margin-top:35px;">🤖 البوتات المتوفرة</h2>
+
+    <div class="grid">
+        {% for bot in bots %}
+        <div class="bot">
+
+            <div class="bot-icon">
+                {{ bot.get('icon', '🤖') }}
+            </div>
+
+            <h2>{{ bot.get('name', 'Bot') }}</h2>
+
+            <p class="muted">
+                {{ bot.get('type', 'بوت ديسكورد') }}
+            </p>
+
+            <div class="status">
+                {% if bot.running %}
+                    <span style="color:#4ade80">● يعمل</span>
+                {% else %}
+                    <span style="color:#f87171">● متوقف</span>
+                {% endif %}
+            </div>
+
+            <a class="details"
+               href="{{ url_for('bot_details', key=bot.key) }}">
+                عرض التفاصيل
+            </a>
+
+        </div>
+        {% else %}
+            <p class="muted">لا توجد بوتات في المكتبة حالياً.</p>
+        {% endfor %}
+    </div>
+
+</div>
+</body>
+</html>

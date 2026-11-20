@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NEXORA | تسجيل الدخول</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+
+<main class="auth-page">
+    <section class="auth-card">
+
+        <img class="auth-logo"
+             src="{{ url_for('static', filename='images/logo.jpg') }}"
+             alt="NEXORA">
+
+        <span class="auth-eyebrow">NEXORA LOGIN</span>
+
+        <h1>تسجيل الدخول</h1>
+
+        <p class="auth-description">
+            أدخل بريد Gmail وسنرسل لك رمز تحقق لتسجيل الدخول.
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="auth-alert">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" class="auth-form">
+
+            <input type="hidden"
+                   name="_csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <label>بريد Gmail</label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="example@gmail.com"
+                required
+                autocomplete="email">
+
+            <button class="auth-button primary" type="submit">
+                إرسال رمز التحقق
+            </button>
+
+        </form>
+
+        <a class="auth-button secondary"
+           href="{{ url_for('index') }}">
+            العودة للرئيسية
+        </a>
+
+        <div class="auth-security">
+            🔒 تسجيل دخول آمن عبر البريد الإلكتروني
+        </div>
+
+        <footer>NEXORA © 2026</footer>
+
+    </section>
+</main>
+
+</body>
+</html>
